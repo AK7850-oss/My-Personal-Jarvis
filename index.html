@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Jarvis</title>
+<style>
+body {
+  background: #101827;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 25px;
+}
+h1 { color: #38d9ff; }
+input, button {
+  padding: 12px;
+  margin: 5px;
+  border-radius: 8px;
+}
+input { width: 75%; }
+button {
+  background: #087ea4;
+  color: white;
+  border: 0;
+}
+#answer {
+  white-space: pre-wrap;
+  margin-top: 25px;
+}
+</style>
+</head>
+<body>
+<h1>🤖 MY JARVIS</h1>
+<p>Personal Voice Assistant</p>
+
+<input id="question" placeholder="Jarvis se baat karo">
+<button onclick="ask()">Send</button>
+<button onclick="listen()">🎤 Bolo</button>
+<button onclick="speak()">🔊 Suno</button>
+<div id="answer"></div>
+
+<script>
+let lastAnswer = "";
+
+function ask() {
+  const q = document.getElementById("question").value.trim();
+  if (!q) return;
+
+  lastAnswer = "Tumhara sawal: " + q +
+    "\n\nYeh demo hai. AI connect karna abhi baqi hai.";
+  document.getElementById("answer").textContent = lastAnswer;
+}
+
+function listen() {
+  const SR = window.SpeechRecognition ||
+             window.webkitSpeechRecognition;
+  if (!SR) {
+    alert("Voice ke liye Chrome browser try karo.");
+    return;
+  }
+  const rec = new SR();
+  rec.lang = "ur-PK";
+  rec.onresult = e => {
+    document.getElementById("question").value =
+      e.results[0][0].transcript;
+    ask();
+  };
+  rec.start();
+}
+
+function speak() {
+  if (!lastAnswer) return;
+  const msg = new SpeechSynthesisUtterance(lastAnswer);
+  speechSynthesis.speak(msg);
+}
+</script>
+</body>
+</html>
+
